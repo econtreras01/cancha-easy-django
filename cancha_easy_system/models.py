@@ -49,7 +49,9 @@ class Pago(models.Model):
     reserva = models.ForeignKey(Reserva, on_delete=models.CASCADE)
     monto = models.IntegerField()
     fecha_pago = models.DateTimeField(auto_now_add=True)
-    metodo_pago = models.CharField(max_length=50)  # Ej. Tarjeta de crédito, PayPal, etc.
+    metodo_pago = models.CharField(
+        max_length=50
+    )  # Ej. Tarjeta de crédito, PayPal, etc.
 
     def __str__(self):
         return f"Pago de {self.monto} por {self.reserva}"
