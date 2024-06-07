@@ -17,7 +17,7 @@ class Usuario(AbstractUser):
 
 
 class Cancha(models.Model):
-    deporte = ((1, "Fútbol"), (2, "Tenis"), (3, "Vóleibol"))
+    deporte = ("Fútbol", "Tenis", "Vóleibol")
     numero = models.IntegerField(primary_key=True)
     tipo = models.IntegerField(choices=deporte)
     descripcion = models.TextField(blank=True)
@@ -28,25 +28,25 @@ class Cancha(models.Model):
 
 
 class Reserva(models.Model):
-    ESTADO_RESERVA = (
+    ESTADO_RESERVA = [
         (1, "Por pagar"),
         (2, "Pagada"),
         (3, "Cancelada"),
-    )
-    id_reserva = models.CharField(max_length=20, primary_key=True)
+    ]
+    id_reserva = models.UUIDField(max_length=20, primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     cancha = models.ForeignKey(Cancha, on_delete=models.CASCADE)
     fecha = models.DateField()
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
-    estado = models.IntegerField(choices=ESTADO_RESERVA, default=1)  # 1: Por pagar, 2: Pagada, 3: Cancelada
+    estado = models.IntegerField(choices=ESTADO_RESERVA, default=1)
 
     def __str__(self):
         return f"{self.usuario.username} - Cancha {self.cancha.numero} - {self.fecha} {self.hora_inicio}-{self.hora_fin}"
 
 
 class Pago(models.Model):
-    reserva = models.OneToOneField(Reserva, on_delete=models.CASCADE)
+    reserva = models.ForeignKey(Reserva, on_delete=models.CASCADE)
     monto = models.IntegerField()
     fecha_pago = models.DateTimeField(auto_now_add=True)
     metodo_pago = models.CharField(max_length=50)  # Ej. Tarjeta de crédito, PayPal, etc.
