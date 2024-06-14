@@ -1,3 +1,4 @@
+import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -17,14 +18,18 @@ class Usuario(AbstractUser):
 
 
 class Cancha(models.Model):
-    deporte = ("Fútbol", "Tenis", "Vóleibol")
+    deporte = [
+        (1, "Fútbol"),
+        (2, "Tenis"),
+        (3, "Vóleibol"),
+    ]
     numero = models.IntegerField(primary_key=True)
     tipo = models.IntegerField(choices=deporte)
     descripcion = models.TextField(blank=True)
     precio_por_hora = models.IntegerField()
 
     def __str__(self):
-        return self.nombre
+        return f"Cancha de {dict(self.deporte)[self.tipo]} N° {self.numero}"
 
 
 class Reserva(models.Model):
@@ -33,7 +38,7 @@ class Reserva(models.Model):
         (2, "Pagada"),
         (3, "Cancelada"),
     ]
-    id_reserva = models.UUIDField(max_length=20, primary_key=True)
+    id_reserva = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     cancha = models.ForeignKey(Cancha, on_delete=models.CASCADE)
     fecha = models.DateField()
@@ -49,9 +54,7 @@ class Pago(models.Model):
     reserva = models.ForeignKey(Reserva, on_delete=models.CASCADE)
     monto = models.IntegerField()
     fecha_pago = models.DateTimeField(auto_now_add=True)
-    metodo_pago = models.CharField(
-        max_length=50
-    )  # Ej. Tarjeta de crédito, PayPal, etc.
+    metodo_pago = models.CharField(max_length=50)
 
     def __str__(self):
         return f"Pago de {self.monto} por {self.reserva}"

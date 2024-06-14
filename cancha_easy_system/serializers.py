@@ -6,14 +6,19 @@ from .models import Usuario, Cancha, Reserva, Pago
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = (["rut", "nombre", "apellido", "telefono", "email", "es_empleado"],)
+        fields = ["username", "password", "rut", "nombre", "apellido", "telefono", "email", "es_empleado"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        user = Usuario.objects.create_user(
             username=validated_data["username"],
-            email=validated_data["email"],
             password=validated_data["password"],
+            rut=validated_data["rut"],
+            nombre=validated_data["nombre"],
+            apellido=validated_data["apellido"],
+            telefono=validated_data["telefono"],
+            email=validated_data["email"],
+            es_empleado=validated_data.get("es_empleado", False),
         )
         return user
 
