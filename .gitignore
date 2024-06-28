@@ -2,9 +2,8 @@ venv
 venv/
 env/
 *.pyc
-*/__pycache__
-cancha_easy/__pycache__
-cancha_easy/__pycache__/*
+
+*__pycache__*
 *.pyo
 *.pyd
 .Python
