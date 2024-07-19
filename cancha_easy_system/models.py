@@ -45,6 +45,8 @@ class Reserva(models.Model):
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
     estado = models.IntegerField(choices=ESTADO_RESERVA, default=1)
+    arriendo_balon = models.BooleanField(default=False, null=True)
+    luz_artificial = models.BooleanField(default=False, null=True)
 
     def __str__(self):
         return f"{self.usuario.username} - Cancha {self.cancha.numero} - {self.fecha} {self.hora_inicio}-{self.hora_fin}"
